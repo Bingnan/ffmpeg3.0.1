@@ -34,6 +34,12 @@ make
 make install
 make distclean
 ```
+然后把$HOME/bin加入系统PATH路径:
+
+```
+PATH=$PATH:$HOME/bin/
+```
+
 ###2.2 libx264
 
 H264编码库,开启需要在FFmpeg的configure中指定： --enable-gpl 和 --enable-libx264
