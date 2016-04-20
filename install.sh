@@ -23,9 +23,11 @@ tar -xvf ffmpeg-3.0.1.tar
 
 cd ~/ffmpeg_source/yasm && autoreconf -fiv && ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" && make && make install && make distclean
 
+PATH=$PATH:$HOME/bin/
+
 cd ~/ffmpeg_source/x264 && PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static && make && make install && make distclean
 
-cd ~/ffmpeg_sources/x265/build/linux && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source && make && make install
+cd ~/ffmpeg_source/x265/build/linux && cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source && make && make install
 
 cd ~/ffmpeg_source/fdk-aac && autoreconf -fiv && ./configure --prefix="$HOME/ffmpeg_build" --disable-shared && make && make install && make distclean
 
