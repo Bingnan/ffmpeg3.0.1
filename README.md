@@ -159,15 +159,20 @@ make clean
 
 rtmp协议库，ffmpeg中原生的rtmp库支持不太好，所以一般使用这个第三方rtmp库。 开启需要在FFmpeg的configure中指定： --enable-librtmp
 
+这个librtmp库居然没有configure文件，无法像其他库一样指定只编译static的库和修改prefix路径，需要自己改Makefile
+
+前面的所有库都没问题，就这个librtmp折腾了半天，一开始没有去改它的Makefile把SHARED置成no, 这样make会编译出静态和动态库，然后make install会把静态和动态库都拷贝到$(HOME)/ffmpeg_build/lib下,然后后面在编译ffmpeg的时候，即使configure时指定了--pkg-config-flags="--static"这样的让链接器链接静态库的参数, 可是等链接器链接时却发现lib下有动态库，还是会优先链接动态库，这样编译出来的ffmpeg中librtmp是动态链接的，但是没有正确设置LD_LIBRARY_PATH参数的话就找不到这个库，从而导致无法运行。
+
 ```
 cd ~/ffmpeg_sources
 curl -O http://rtmpdump.mplayerhq.hu/download/rtmpdump-2.3.tgz
 tar xzvf rtmpdump-2.3.tgz
 cd rtmpdump-2.3/librtmp
+sed -i 's#prefix=/usr/local#prefix=$(HOME)/ffmpeg_build#' Makefile
+sed -i 's/SHARED=yes/SHARED=no/' Makefile
 make
 make install
 make clean
-cp librtmp.pc $HOME/ffmpeg_build/lib/pkgconfig
 ```
 
 ##3.编译FFmpeg
@@ -176,9 +181,9 @@ cp librtmp.pc $HOME/ffmpeg_build/lib/pkgconfig
 
 ```
 cd ~/ffmpeg_sources
-git clone git://source.ffmpeg.org/git/ffmpeg.git
+git clone git://source.ffmpeg.org/ffmpeg.git ffmpeg
 cd ffmpeg
-PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-openssl --enable-protocol=rtmp --enable-librtmp --enable-demuxer=rtsp --enable-muxer=rtsp --enable-libfreetype --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
+PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-openssl --enable-protocol=rtmp --enable-librtmp --enable-demuxer=rtsp --enable-muxer=rtsp --enable-libfreetype --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --disable-shared --enable-static --disable-debug
 make
 make install
 make distclean
