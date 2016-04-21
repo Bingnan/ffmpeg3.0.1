@@ -45,7 +45,7 @@ cd ~/ffmpeg_source/rtmpdump-2.3/librtmp && sed -i 's#prefix=/usr/local#prefix=$(
 
 cd ~/ffmpeg_source/ffmpeg-3.0.1 && PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-openssl --enable-protocol=rtmp --enable-librtmp --enable-demuxer=rtsp --enable-muxer=rtsp --enable-libfreetype --enable-libfdk-aac --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --disable-shared --enable-static --disable-debug && make && make install && make distclean
 
-mkdir -p /usr/local/ffmpeg/bin
+mkdir -p /usr/local/ffmpeg/3.0.1/bin
 cd ~/bin
-cp -rf ff* /usr/local/ffmpeg/bin
-echo 'PATH=/usr/local/ffmpeg/bin:$PATH' >> /etc/bashrc && source /etc/bashrc
+cp -rf ff* /usr/local/ffmpeg/3.0.1/bin
+echo 'PATH=/usr/local/ffmpeg/3.0.1/bin:$PATH' >> /etc/bashrc && source /etc/bashrc
