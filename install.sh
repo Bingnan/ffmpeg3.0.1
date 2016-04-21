@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yum install autoconf automake cmake freetype-devel openssl-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel
+yum -y install autoconf automake cmake freetype-devel openssl-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel
 
 mkdir -p ~/ffmpeg_source
 
